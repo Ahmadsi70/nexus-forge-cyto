@@ -92,6 +92,7 @@ services, a React frontend, and an optional Mojo acceleration engine.
 
 ### Prerequisites
 
+- **Git LFS** (required for the ONNX model — `git lfs pull` after clone)
 - **Rust** >= 1.75 ([rustup.rs](https://rustup.rs))
 - **Python** >= 3.10
 - Optional: **Mojo** 0.26.1.0 (for kappa curvature acceleration)
@@ -99,20 +100,21 @@ services, a React frontend, and an optional Mojo acceleration engine.
 ### 5 Minutes to First Enriched Output
 
 ```bash
-# 1. Clone
-git clone https://github.com/clinicalguard/nexus-forge-cyto.git
-cd cancer_project
+# 1. Clone (requires Git LFS for the ONNX model)
+git clone https://github.com/Ahmadsi70/nexus-forge-cyto.git
+cd nexus-forge-cyto
+git lfs pull
 
-# 2. Build Rust binaries (release mode)
+# 2. Build Rust binaries (release mode — may take a few minutes)
 cargo build --release
 
 # 3. Run the pure-geometry pipeline on sample data
-cargo run --bin nexus-core-cli -- \
+cargo run --bin nexus-core-cli --release -- \
   Single --input ./data/sample.json --output ./output.json
 
 # 4. View results
 cat ./output.json | jq '.clinical[:5]'
-# -> ["Malignant", "Normal", "Normal", "Malignant", "Normal"]
+# -> ["Malignant", "Normal", "Malignant", ...]
 ```
 
 ### Topology Segmentation (Material/Void)
@@ -181,7 +183,6 @@ docker-compose up -d
 | `nexus-forge-cyto-api/` | Axum HTTP API server (port 8811) |
 | `nexus-viewer/` | React frontend (canvas polygon visualization) |
 | `models/` | Deployed models: HoVerNet ONNX, GBM classifier, fusion metadata |
-| `training/` | Training scripts: HoVerNet fine-tuning, GBM retraining, ONNX export |
 | `mojo_core/` | Mojo SIMD curvature engine (kappa_engine.mojo) |
 | `data/` | Sample datasets and benchmark results |
 | `docs/` | Architecture docs, integration strategy, API reference |
