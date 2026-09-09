@@ -36,6 +36,7 @@ RUN pixi run cargo build --release --bin nexus-forge-cyto-batch && \
 
 COPY services/ /app/services/
 COPY schemas/ /app/schemas/
+COPY models/ /app/models/
 
 # ---------------------------------------------------------------------------
 # Stage 2 — Runtime: lean Ubuntu + compiled artifacts + Pixi shell
@@ -67,6 +68,7 @@ COPY --from=builder /app/target/release/nexus-forge-cyto-batch /app/target/relea
 
 COPY --from=builder /app/services/ /app/services/
 COPY --from=builder /app/schemas/ /app/schemas/
+COPY models/ /app/models/
 
 RUN mkdir -p /app/tmp/production_output && \
     chmod +x /app/target/release/nexus-forge-cyto-batch
