@@ -26,17 +26,17 @@ RUN curl -fsSL https://pixi.sh/install.sh | bash
 
 WORKDIR /app
 
-COPY nexus-forge-cyto/pixi.toml /app/pixi.toml
+COPY pixi.toml /app/pixi.toml
 RUN pixi install
 
-COPY nexus-forge-cyto/Cargo.toml nexus-forge-cyto/Cargo.lock nexus-forge-cyto/build.rs /app/
-COPY nexus-forge-cyto/src/ /app/src/
+COPY Cargo.toml Cargo.lock build.rs /app/
+COPY src/ /app/src/
 
 RUN pixi run cargo build --release --bin nexus-forge-cyto-batch && \
     test -f /app/target/release/nexus-forge-cyto-batch
 
-COPY nexus-forge-cyto/services/ /app/services/
-COPY nexus-forge-cyto/schemas/ /app/schemas/
+COPY services/ /app/services/
+COPY schemas/ /app/schemas/
 COPY models/ /app/models/
 
 # ---------------------------------------------------------------------------

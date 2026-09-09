@@ -65,6 +65,9 @@ jobs:
         with:
           lfs: true
 
+      - name: Prepare Docker context
+        run: cp -r models/ nexus-forge-cyto/models/
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -88,8 +91,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: nexus-forge-cyto/Dockerfile
+          context: nexus-forge-cyto
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
