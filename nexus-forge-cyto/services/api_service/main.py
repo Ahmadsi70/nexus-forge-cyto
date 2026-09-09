@@ -68,7 +68,12 @@ api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
 
 async def verify_api_key(api_key: str | None = Security(api_key_header)):
-    """Validate API key if NEXUS_API_KEY is configured."""
+    """Validate API key if NEXUS_API_KEY is configured.
+    
+    ⚠️ SECURITY: When NEXUS_API_KEY is not set, ALL requests are allowed
+    without authentication (developer mode). For production deployment,
+    ALWAYS set a strong NEXUS_API_KEY environment variable.
+    """
     expected = os.environ.get("NEXUS_API_KEY", "").strip()
     if expected:
         if not api_key:

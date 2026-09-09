@@ -6,7 +6,7 @@ services:
     image: nexus-forge-cyto:latest
     container_name: nexus-forge-cyto
     ports:
-      - "8501:8501"
+      - "127.0.0.1:8501:8501"
     environment:
       NEXUS_REPO_ROOT: /app
       NEXUS_OUTPUT_DIR: /app/tmp/production_output
@@ -35,7 +35,7 @@ services:
     container_name: nexus-forge-cyto-api
     command: ["pixi", "run", "api"]
     ports:
-      - "8810:8810"
+      - "127.0.0.1:8810:8810"
     environment:
       NEXUS_REPO_ROOT: /app
       NEXUS_OUTPUT_DIR: /app/tmp/production_output

@@ -5,7 +5,7 @@ Why: quantifies how much expert polygon fidelity is preserved when the offline
 geometry engine normalizes boundaries to the fixed 32-vertex contract.
 
 Default XML:
-  C:\\Users\\badri\\Downloads\\MoNuSegTestData\\MoNuSegTestData\\TCGA-IZ-8196-01A-01-BS1.xml
+  C:\path\to\MoNuSegTestData\MoNuSegTestData\TCGA-IZ-8196-01A-01-BS1.xml
 
 Override:
   CYTO_MONUSEG_XML=/path/to/file.xml pytest tests/test_monuseg_geometry_tolerance.py -v
@@ -39,7 +39,7 @@ from nexus_core.coord_adapter import (  # noqa: E402
 )
 
 DEFAULT_XML = Path(
-    r"C:\Users\badri\Downloads\MoNuSegTestData\MoNuSegTestData\TCGA-IZ-8196-01A-01-BS1.xml"
+    r"C:\path\to\MoNuSegTestData\MoNuSegTestData\TCGA-IZ-8196-01A-01-BS1.xml"
 )
 RUST_BIN = _REPO / "target" / "release" / "nexus-forge-cyto-batch.exe"
 OUT_DIR = _REPO / "tmp" / "production_output" / "monuseg_tolerance"

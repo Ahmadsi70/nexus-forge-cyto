@@ -17,8 +17,8 @@ from PIL import Image
 def _dsb_test_root() -> Path:
     """Prefer WSL-mounted path when running under WSL; else native Windows tree."""
     candidates = [
-        Path("/mnt/c/Users/badri/Downloads/dsb2018/dsb2018/test"),
-        Path(r"C:\Users\badri\Downloads\dsb2018\dsb2018\test"),
+        Path("/mnt/c/Users/user/Downloads/dsb2018/dsb2018/test"),
+        Path(r"C:\Users\user\Downloads\dsb2018\dsb2018\test"),
     ]
     for p in candidates:
         if p.is_dir():

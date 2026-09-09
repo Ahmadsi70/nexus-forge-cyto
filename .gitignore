@@ -62,6 +62,15 @@ node_modules/
 .zcode/
 .no-mistakes/
 
+# Internal training scripts (not part of the public distribution)
+training/
+data/reports/
+
+# Internal benchmarks
+benchmark_hovernet.py
+benchmark_hovernet.json
+runpod_benchmark.py
+
 # Logs
 *.log
 

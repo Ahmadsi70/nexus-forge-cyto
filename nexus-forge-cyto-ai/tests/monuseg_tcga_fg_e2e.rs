@@ -3,8 +3,7 @@
 //!
 //! **Mojo optional**: Curvature falls back to **`κ=0`** / Normal when **`math_core`** is not linked; Rust phases stay fully active.
 //!
-//! **Input**: Default corpus path references **`C:\Users\badri\...`**; on **Linux/WSL** the same logical path maps to
-//! **`/mnt/c/Users/badri/...`**. Override anytime with **`CYTO_MONUSEG_XML`** (must exist).
+//! **Input**: Set the `CYTO_MONUSEG_XML` env var to the MoNuSeg XML path.
 
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -12,9 +11,9 @@ use std::process::Command;
 
 use serde_json::Value;
 
-/// Canonical MoNuSeg regression XML (Windows volume spelling — see [`resolved_monuseg_xml_path`] for WSL mapping).
+/// Canonical MoNuSeg regression XML (override via CYTO_MONUSEG_XML env var).
 const MONUSEG_XML_WINDOWS: &str =
-    r"C:\Users\badri\Downloads\MoNuSegTestData\MoNuSegTestData\TCGA-FG-A4MU-01B-01-TS1.xml";
+    r"C:\path\to\MoNuSegTestData\MoNuSegTestData\TCGA-FG-A4MU-01B-01-TS1.xml";
 
 fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -174,10 +173,10 @@ mod wsl_path_tests {
     #[test]
     fn maps_drive_c_users_tree() {
         assert_eq!(
-            windows_absolute_to_wsl_host_path(r"C:\Users\badri\Downloads\file.xml")
+            windows_absolute_to_wsl_host_path(r"C:\Users\user\Downloads\file.xml")
                 .to_str()
                 .unwrap(),
-            "/mnt/c/Users/badri/Downloads/file.xml"
+            "/mnt/c/Users/user/Downloads/file.xml"
         );
     }
 

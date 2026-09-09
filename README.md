@@ -297,7 +297,7 @@ directly from QuPath's menu bar, with three visualization modes:
    ```bash
    export NEXUS_FORGE_HOME=/path/to/this/repo
    # Windows PowerShell:
-   $env:NEXUS_FORGE_HOME = "C:\Users\badri\cancer_project"
+   $env:NEXUS_FORGE_HOME = "C:\path\to\this\repo"
    ```
 
 4. **Restart QuPath** — a new menu item appears:
@@ -334,7 +334,7 @@ All settings via `.env` file in the project root:
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `NEXUS_API_KEY` | (empty = open access) | FastAPI authentication key |
+| `NEXUS_API_KEY` | (empty = open access ⚠️) | FastAPI authentication key — **set a strong key in production!** |
 | `NEXUS_RUST_BRIDGE` | `auto` | Rust invocation mode: auto / shared_library / subprocess |
 | `NEXUS_SAM3_MODEL_PATH` | `~/.cache/nexus-forge/sam3.pt` | SAM 3 model weights path |
 | `NEXUS_GNN_WEIGHTS` | (empty) | GNN weights JSON path |

@@ -22,7 +22,7 @@ PROJECT_ROOT = SCRIPT_DIR.parent  # nexus-forge-cyto-ai
 WORKSPACE_ROOT = PROJECT_ROOT.parent  # cancer_project (Cargo workspace)
 sys.path.insert(0, str(PROJECT_ROOT / "services"))
 
-TEST_DATA = Path(r"C:\Users\badri\Downloads\MoNuSegTestData\MoNuSegTestData\TCGA-HT-8564-01Z-00-DX1.xml")
+TEST_DATA = Path(r"C:\path\to\MoNuSegTestData\MoNuSegTestData\TCGA-HT-8564-01Z-00-DX1.xml")
 RESULTS = {}
 
 def ok(test_name: str) -> None:

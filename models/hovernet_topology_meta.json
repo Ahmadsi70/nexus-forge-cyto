@@ -2,7 +2,7 @@
   "model": "hovernet_topology_seg.onnx",
   "architecture": "HoVerNet (ResNet50 backbone, onnx2torch GraphModule)",
   "task": "Binary topology segmentation (material/void)",
-  "base_init": "/workspace/models/full_model.pth",
+  "base_init": "HoVerNet fold12 pretrained weights (not included in this repository)",
   "training_phase1": {
     "dataset": "MIT TopoDiff (cons_pf_array, 64x64x3)",
     "samples": 30000,
