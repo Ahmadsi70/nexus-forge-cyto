@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.6
 # Nexus-Forge cytology hybrid pipeline — multi-stage HPC image (Python 3.10 / Rust AVX2, κ in Rust).
+# Build context = repo root (so models/ is accessible)
 
 # ---------------------------------------------------------------------------
 # Stage 1 — Builder: Pixi env + release Rust batch binary
@@ -25,17 +26,17 @@ RUN curl -fsSL https://pixi.sh/install.sh | bash
 
 WORKDIR /app
 
-COPY pixi.toml /app/pixi.toml
+COPY nexus-forge-cyto/pixi.toml /app/pixi.toml
 RUN pixi install
 
-COPY Cargo.toml Cargo.lock build.rs /app/
-COPY src/ /app/src/
+COPY nexus-forge-cyto/Cargo.toml nexus-forge-cyto/Cargo.lock nexus-forge-cyto/build.rs /app/
+COPY nexus-forge-cyto/src/ /app/src/
 
 RUN pixi run cargo build --release --bin nexus-forge-cyto-batch && \
     test -f /app/target/release/nexus-forge-cyto-batch
 
-COPY services/ /app/services/
-COPY schemas/ /app/schemas/
+COPY nexus-forge-cyto/services/ /app/services/
+COPY nexus-forge-cyto/schemas/ /app/schemas/
 COPY models/ /app/models/
 
 # ---------------------------------------------------------------------------
