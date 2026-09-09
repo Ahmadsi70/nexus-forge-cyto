@@ -167,7 +167,7 @@ def compute_biomarkers(
         k_mean = float(np.mean(k_arr))
         k_std = float(np.std(k_arr)) if len(k_arr) > 1 else 1.0
         skew = float(np.mean(((k_arr - k_mean) / max(k_std, 1e-12)) ** 3)) if k_std > 1e-12 else 0.0
-    eae:
+    else:
         skew = 0.0
 
     # Tumor Heterogeneity Score: Gini coefficient of eccentricity distribution
