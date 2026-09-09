@@ -95,7 +95,8 @@ services, a React frontend, and an optional Mojo acceleration engine.
 - **Git LFS** (required for the ONNX model — `git lfs pull` after clone)
 - **Rust** >= 1.75 ([rustup.rs](https://rustup.rs))
 - **Python** >= 3.10
-- Optional: **Mojo** 0.26.1.0 (for kappa curvature acceleration)
+- Optional: **Mojo** 0.26.1.0 (for kappa curvature — see [docs/getting-started.md](docs/getting-started.md))
+- Optional: **SAM 3** model for image → nuclei (see [docs/getting-started.md](docs/getting-started.md))
 
 ### 5 Minutes to First Enriched Output
 
@@ -208,9 +209,9 @@ docker-compose up -d
 
 | Model | File | AUC | F1 | Notes |
 |-------|------|-----|----|-------|
-| HoVerNet (fine-tuned) | `models/hovernet_finetuned.onnx` | -- | -- | 3-head (NP, HV, TP) nuclear segmentation |
+| HoVerNet (fine-tuned) | `models/hovernet_finetuned.onnx` | -- | -- | 3-head (NP, HV, TP) — ⚠️ not included, see [docs/getting-started.md](docs/getting-started.md) |
 | GBM Fusion Classifier | `models/nexus_fusion_classifier.joblib` | **0.98** | **0.88** | 16 geometry features + neoplastic probability |
-| Topology Segmentation | `models/hovernet_topology_seg.onnx` | -- | -- | Binary material/void segmentation (Dice 0.849 on MIT TopoDiff) |
+| Topology Segmentation | `models/hovernet_topology_seg.onnx` | -- | -- | Binary material/void segmentation (Dice 0.849 on MIT TopoDiff) — ✅ included via Git LFS |
 
 ### Topology Segmentation Performance
 

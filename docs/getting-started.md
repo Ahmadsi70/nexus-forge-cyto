@@ -5,20 +5,24 @@ using Nexus-Forge's explainable geometry pipeline.
 
 ## Prerequisites
 
+- **Git LFS** ([install guide](https://git-lfs.com/)) — needed for ONNX model (145 MB)
 - **Rust** >= 1.75 ([rustup.rs](https://rustup.rs))
 - **Python** >= 3.10
 - Optional: **Docker** >= 24.0 (for containerized deployment)
+- Optional: **SAM 3** model for image → nuclei pipeline (see [Image Analysis](#image-analysis--sam-3) below)
 
 ## 5-Minute Quickstart
 
 ### Option A: Docker (recommended for evaluation)
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/clinicalguard/nexus-forge-cyto.git
-cd cancer_project/nexus-forge-cyto
+# 1. Clone the repository (requires Git LFS)
+git clone https://github.com/Ahmadsi70/nexus-forge-cyto.git
+cd nexus-forge-cyto
+git lfs pull
 
-# 2. Start the services
+# 2. Start the services (from the nexus-forge-cyto subdirectory)
+cd nexus-forge-cyto
 docker-compose up -d
 
 # 3. Open the dashboard
@@ -33,30 +37,35 @@ docker-compose down
 
 ```bash
 # 1. Clone
-git clone https://github.com/clinicalguard/nexus-forge-cyto.git
-cd cancer_project
+git clone https://github.com/Ahmadsi70/nexus-forge-cyto.git
+cd nexus-forge-cyto
+git lfs pull
 
 # 2. Build
 cargo build --release
 
 # 3. Run the pure-geometry pipeline
-echo '{"cell_count":2,"cells":[[[0,0],[10,0],[10,10],[0,10]],[[20,20],[35,20],[35,35],[20,35]]]}' > /tmp/input.json
-
-cargo run --bin nexus-core-cli -- Single --input /tmp/input.json --output /tmp/output.json
+cargo run --release --bin nexus-core-cli -- \
+  Single --input ./data/sample.json --output /tmp/output.json
 
 # 4. See the results
 cat /tmp/output.json | python -m json.tool | head -20
 ```
 
-### Option C: Python API
+### Option C: Python API (with SAM 3)
+
+**Requires SAM 3 model** — see [Image Analysis with SAM 3](#image-analysis-with-sam-3) below.  
+The pure geometry pipeline (Option B) does not need SAM 3.
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/clinicalguard/nexus-forge-cyto.git
-cd cancer_project/nexus-forge-cyto
-pip install -r requirements-api.txt
+git clone https://github.com/Ahmadsi70/nexus-forge-cyto.git
+cd nexus-forge-cyto
+git lfs pull
+pip install -r nexus-forge-cyto/requirements-api.txt
 
 # 2. Start the API server
+cd nexus-forge-cyto
 NEXUS_RUST_BRIDGE=subprocess PYTHONPATH=services python services/api_service/main.py
 
 # 3. In another terminal, upload an image
@@ -140,11 +149,93 @@ Red = Malignant, Blue = Normal. Measurements appear in the Measurements tab.
 |---------|----------|
 | `cargo build` fails | Ensure Rust >= 1.75: `rustup update stable` |
 | Python imports fail | Run from `nexus-forge-cyto/` with `PYTHONPATH=services` |
-| SAM 3 segmentation fails | Download model: `wget https://.../sam3.pt -O ~/.cache/nexus-forge/sam3.pt` |
+| SAM 3 segmentation fails | See [Image Analysis with SAM 3](#image-analysis--sam-3) below |
 | "No nuclei detected" | Image may have low contrast. Try adjusting SAM 3 confidence: `NEXUS_SAM3_CONF=0.15` |
 | Docker out of memory | Increase limit: `NEXUS_DOCKER_MEM=16g docker-compose up` |
 
+---
+
+## Image Analysis with SAM 3
+
+For full image → nuclei → geometry pipeline, you need the **SAM 3** model
+(~2.4 GB) from Facebook Research / Ultralytics:
+
+```bash
+# 1. Get a HuggingFace token
+#    https://huggingface.co/settings/tokens  →  Create "read" token
+
+# 2. Export your token
+export HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# 3. Run the setup script
+python scripts/setup_sam3.py
+
+# 4. Verify it works
+python -c "from api_service.sam3_segment import _sam3_model_path; print('SAM3 path:', _sam3_model_path())"
+PYTHONPATH=services
+```
+
+The model is downloaded to `~/.cache/nexus-forge/sam3.pt` by default.
+Override with `NEXUS_SAM3_MODEL_PATH` environment variable.
+
+### SAM 3 Environment Variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `NEXUS_SAM3_MODEL_PATH` | `~/.cache/nexus-forge/sam3.pt` | Path to sam3.pt weights |
+| `NEXUS_SAM3_CONF` | `0.15` | Detection confidence threshold |
+| `NEXUS_SAM3_NMS_IOU` | `0.30` | Non-maximum suppression IoU threshold |
+| `NEXUS_SAM3_BOX_CHUNK` | `48` | Max boxes per SAM3 inference call |
+
+---
+
+## HoVerNet Nuclear Segmentation (Pre-Trained Weights)
+
+The [original HoVerNet](https://github.com/vqdang/hover_net) fold-12
+nuclear segmentation weights (`hovernet_finetuned.onnx`, ~151 MB) are
+**not included** in this repository due to licensing restrictions.
+
+To use the full AI + Geometry pipeline, download the weights separately:
+
+```bash
+# Option A: Download from the original HoVerNet repository
+# See: https://github.com/vqdang/hover_net/releases
+# Place at: models/hovernet_finetuned.onnx
+
+# Option B: Use the topology model (included via Git LFS)
+# python run_topology_inference.py --info
+```
+
+The **topology segmentation model** (`hovernet_topology_seg.onnx`) IS
+included and works on CPU — no GPU or external download needed.
+
+---
+
+## Mojo κ (Curvature Acceleration)
+
+The **Mojo κ engine** provides SIMD-accelerated curvature computation
+for large batches. It is optional — the Rust fallback (`κ=0` / normal)
+is always available in the binary distribution.
+
+```bash
+# Mojo is NOT required for any pipeline feature.
+# It only improves throughput on very large batches (>10K cells).
+
+# If you have Mojo 0.26.1.0 installed:
+cd mojo_core
+mojo build kappa_engine.mojo
+# The resulting .so is auto-detected by the Rust FFI bridge.
+```
+
+### Mojo Status
+
+| Feature | With Mojo | Without Mojo (Rust fallback) |
+|---------|-----------|------------------------------|
+| Curvature (κ) | Full computation | `κ=0`, flagged as "normal" |
+| Throughput | ~3× faster for large batches | Same for <1K cells |
+| Installation | Mojo SDK (free tier available) | None needed |
+
 ## Support
 
-- GitHub Issues: [https://github.com/clinicalguard/nexus-forge-cyto/issues](https://github.com/clinicalguard/nexus-forge-cyto/issues)
+- GitHub Issues: [https://github.com/Ahmadsi70/nexus-forge-cyto/issues](https://github.com/Ahmadsi70/nexus-forge-cyto/issues)
 - Documentation: `docs/` directory in the repository
