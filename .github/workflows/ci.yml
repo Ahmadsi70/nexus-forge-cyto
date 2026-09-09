@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --all-targets
+        working-directory: nexus-forge-cyto
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dashboard.txt
+          pip install -r requirements-api.txt
+          python -m pytest tests/ -q
+        working-directory: nexus-forge-cyto

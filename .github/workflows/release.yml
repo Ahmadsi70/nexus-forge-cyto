@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: nexus-forge-cyto-batch-linux-x86_64
+            bin_glob: target/release/nexus-forge-cyto-batch
+          - os: windows-latest
+            artifact: nexus-forge-cyto-batch-windows-x86_64
+            bin_glob: target/release/nexus-forge-cyto-batch.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build release binary
+        run: cargo build --release --bin nexus-forge-cyto-batch
+        working-directory: nexus-forge-cyto
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.bin_glob }}
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          gh release create "$tag" \
+            --title "Nexus-Forge Cyto $tag" \
+            --notes "Prebuilt geometry batch binaries (Rust κ engine)." \
+            dist/nexus-forge-cyto-batch-linux-x86_64/nexus-forge-cyto-batch \
+            dist/nexus-forge-cyto-batch-windows-x86_64/nexus-forge-cyto-batch.exe

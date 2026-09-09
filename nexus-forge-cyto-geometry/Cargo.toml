@@ -3,7 +3,7 @@ name = "nexus-forge-cyto-geometry"
 version = "0.2.0"
 edition = "2021"
 description = "Deterministic spatial morphometrics & explainable malignancy scoring — shared geometry engine"
-license = "MIT OR Apache-2.0"
+license = "LicenseRef-Proprietary"
 
 [lib]
 name = "nexus_forge_cyto_geometry"

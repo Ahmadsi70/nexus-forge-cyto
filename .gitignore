@@ -68,5 +68,14 @@ node_modules/
 # Debug scripts
 debug_*.py
 debug_*.npz
-debug_*.png# Offline wheels (too large for GitHub — download from PyPI instead)
+debug_*.png
+debug_*.npz
+
+# Offline wheels (too large for GitHub — download from PyPI instead)
 offline/wheels/
+
+# Patient data — NOT for public distribution
+results/
+
+# SIRAT (unrelated project)
+sirat/

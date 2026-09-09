@@ -3,7 +3,7 @@ name = "nexus-forge-cyto-core"
 version = "0.2.0"
 edition = "2021"
 description = "Pure geometry CLI — wraps the shared nexus-forge-cyto-geometry engine"
-license = "MIT OR Apache-2.0"
+license = "LicenseRef-Proprietary"
 
 [lib]
 name = "nexus_forge_cyto_core"

@@ -3,7 +3,7 @@ name = "nexus-forge-cyto-ai"
 version = "0.1.0"
 edition = "2021"
 description = "Edge Computational Cytology — AI-extended pipeline (Cellpose ingest, GNN inference)"
-license = "MIT OR Apache-2.0"
+license = "LicenseRef-Proprietary"
 build = "build.rs"
 
 # `rlib` enables `cargo test` / Rust callers; ship the `cdylib` artifact to Mojo/C++.

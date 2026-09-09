@@ -207,7 +207,7 @@ Set `NEXUS_LOG=info` (or `debug` for verbose output) to control log verbosity.
 Logs are written to stderr with structured format:
 
 ```
-2026-09-01T12:34:56 [INFO ] [nexus.api] [req_id=a1b2c3] POST /v1/enrich -> 200 (45.2ms) [ip=10.0.0.5]
+2026-09-01T12:34:56 [INFO ] [nexus.api] [req_id=a1b2c3] POST /v1/enrich -> 200 (45.2ms) [ip=198.51.100.7]
 ```
 
 In Docker, view logs with:
