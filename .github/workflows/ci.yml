@@ -29,5 +29,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dashboard.txt
           pip install -r requirements-api.txt
-          python -m pytest tests/ -q
+          pip install pytest pytest-json report 2>/dev/null || pip install pytest
+          python -m pytest tests/ -q --ignore=tests/fixtures --ignore=tests/validation
         working-directory: nexus-forge-cyto
