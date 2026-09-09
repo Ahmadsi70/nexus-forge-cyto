@@ -65,8 +65,16 @@ jobs:
         with:
           lfs: true
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: nexus-forge-cyto-batch-linux-x86_64
+
       - name: Prepare Docker context
-        run: cp -r models/ nexus-forge-cyto/models/
+        run: |
+          mkdir -p nexus-forge-cyto/target/release
+          mv nexus-forge-cyto-batch nexus-forge-cyto/target/release/nexus-forge-cyto-batch
+          chmod +x nexus-forge-cyto/target/release/nexus-forge-cyto-batch
+          cp -r models/ nexus-forge-cyto/models/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
