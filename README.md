@@ -2,10 +2,22 @@
 
 **Explainable Geometry for Digital Pathology**
 
+[![License](https://img.shields.io/badge/License-Custom%20(Free%20for%20all%20uses)-blue)](LICENSE)
+[![Free](https://img.shields.io/badge/Free-For%20All%20Uses-brightgreen)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Rust](https://img.shields.io/badge/Rust-2021-orange)](https://www.rust-lang.org/)
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)](.github/workflows/ci.yml)
+
 A multi-layered computational cytology platform for automating histopathology
 analysis -- detecting and classifying malignant (cancerous) cells from
 H&E-stained tissue slides using a unique combination of deep learning
 computer vision, deterministic geometry, and spatial topology.
+
+**100% Free for all uses** — academic research, clinical diagnostics,
+commercial products, SaaS, and personal projects. The project is owned by
+ClinicalGuard and distributed with all rights reserved. You may use, modify,
+and distribute the software freely, but you may NOT sell, sublicense, or
+claim ownership of it. See [LICENSE](LICENSE).
 
 ---
 
