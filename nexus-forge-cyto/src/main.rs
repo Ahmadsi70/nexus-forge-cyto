@@ -102,7 +102,7 @@ fn main() {
 
     let mut paths: Vec<PathBuf> = Vec::new();
     if let Err(e) = collect_json_files(&cli.input_dir, &mut paths) {
-        etracing::info!("error: scanning {}: {e}", cli.input_dir.display());
+        tracing::info!("error: scanning {}: {e}", cli.input_dir.display());
         std::process::exit(2);
     }
 
@@ -142,7 +142,7 @@ fn main() {
 
     // Print all collected errors sequentially for clean, readable output.
     for msg in errors.into_inner().unwrap_or_default() {
-        etracing::info!("{msg}");
+        tracing::info!("{msg}");
     }
 
     let elapsed = started.elapsed().as_secs_f64();
@@ -151,7 +151,7 @@ fn main() {
 
     tracing::info!("Successfully processed {n_ok} files in {elapsed:.2} seconds.");
     if n_fail > 0 {
-        etracing::info!("{n_fail} file(s) failed (details above).");
+        tracing::info!("{n_fail} file(s) failed (details above).");
         std::process::exit(1);
     }
 }
