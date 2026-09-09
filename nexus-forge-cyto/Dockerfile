@@ -29,9 +29,9 @@ COPY pixi.toml /app/pixi.toml
 RUN pixi install
 
 # ---------------------------------------------------------------------------
-# Prebuilt Rust binary (from CI `build` job)
+# Prebuilt Rust binary (from CI `build` job — placed in bin/ by workflow)
 # ---------------------------------------------------------------------------
-COPY target/release/nexus-forge-cyto-batch /app/target/release/nexus-forge-cyto-batch
+COPY bin/nexus-forge-cyto-batch /app/target/release/nexus-forge-cyto-batch
 
 # ---------------------------------------------------------------------------
 # Python services, schemas, models

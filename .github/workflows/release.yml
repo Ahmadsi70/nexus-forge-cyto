@@ -71,9 +71,9 @@ jobs:
 
       - name: Prepare Docker context
         run: |
-          mkdir -p nexus-forge-cyto/target/release
-          mv nexus-forge-cyto-batch nexus-forge-cyto/target/release/nexus-forge-cyto-batch
-          chmod +x nexus-forge-cyto/target/release/nexus-forge-cyto-batch
+          mkdir -p nexus-forge-cyto/bin
+          mv nexus-forge-cyto-batch nexus-forge-cyto/bin/nexus-forge-cyto-batch
+          chmod +x nexus-forge-cyto/bin/nexus-forge-cyto-batch
           cp -r models/ nexus-forge-cyto/models/
 
       - name: Set up Docker Buildx
