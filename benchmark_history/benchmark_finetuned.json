@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "pipeline": "HoVerNet ONNX -> Python Geometry -> Fusion GBM (AUC 0.92)",
+    "model": "hovernet_finetuned.onnx (fine-tuned)",
+    "classifier": "nexus_fusion_classifier.joblib (Gradient Boosting, 16 feat)",
+    "timestamp": "2026-08-25T12:05:48Z"
+  },
+  "datasets": {
+    "pan_cancer": {
+      "samples": 100,
+      "completed": 100,
+      "errors": 0,
+      "total_cells_detected": 0,
+      "total_malignant_predicted": 0,
+      "cells_per_image": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "latency_ms": {
+        "mean": 6308.7,
+        "p50": 6098.9,
+        "p95": 8189.0,
+        "p99": 8819.7
+      },
+      "timing_breakdown_ms": {
+        "hovernet_mean": 6308.7,
+        "geometry_mean": 0.0,
+        "classifier_mean": 0.0
+      },
+      "throughput": {
+        "images_per_sec": 0.16,
+        "cells_per_sec": 0.0
+      }
+    }
+  },
+  "aggregate": {
+    "datasets_benchmarked": 1,
+    "avg_latency_ms": 6308.7,
+    "total_cells_detected": 0,
+    "avg_cells_per_dataset": 0.0
+  }
+}

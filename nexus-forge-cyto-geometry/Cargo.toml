@@ -1,0 +1,18 @@
+[package]
+name = "nexus-forge-cyto-geometry"
+version = "0.2.0"
+edition = "2021"
+description = "Deterministic spatial morphometrics & explainable malignancy scoring — shared geometry engine"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "nexus_forge_cyto_geometry"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+rayon = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

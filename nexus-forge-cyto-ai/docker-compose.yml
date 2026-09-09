@@ -1,0 +1,38 @@
+services:
+  nexus-forge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nexus-forge-cyto:latest
+    container_name: nexus-forge-cyto
+    ports:
+      - "8501:8501"
+    environment:
+      CYTO_MOJO_LIB_DIR: /app/target
+      LD_LIBRARY_PATH: /app/target
+      NEXUS_REPO_ROOT: /app
+      NEXUS_OUTPUT_DIR: /app/tmp/production_output
+      NEXUS_POLL_MS: "500"
+      PYTHONPATH: /app/services
+    volumes:
+      - nexus_production_output:/app/tmp/production_output
+    env_file:
+      - path: ../.env
+        required: false
+    restart: unless-stopped
+    # Bound CPU/memory so a runaway Cellpose/PyTorch process cannot OOM the host.
+    # Tunable via NEXUS_DOCKER_MEM / NEXUS_DOCKER_CPUS overrides in the host env.
+    mem_limit: ${NEXUS_DOCKER_MEM:-8g}
+    mem_reservation: ${NEXUS_DOCKER_MEM_RESERVE:-4g}
+    cpus: ${NEXUS_DOCKER_CPUS:-4.0}
+    memswap_limit: ${NEXUS_DOCKER_MEMSWAP:-12g}
+    oom_kill_disable: false
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+volumes:
+  nexus_production_output:

@@ -1,0 +1,24 @@
+# Trusted gate config (read from default branch). Personal single-dev daemon.
+allow_repo_commands: true
+no_ci: true
+
+commands:
+  # Targeted export/schema/UI↔API alignment checks (not full CI suite).
+  test: "python -m pytest tests/test_export_schema_align.py tests/test_dashboard_pipeline_align.py tests/test_api_service.py tests/test_vector_ingest.py -q"
+  lint: "python -m compileall -q services"
+  format: "python -c \"print('no formatter configured')\""
+
+document:
+  instructions: |
+    docs/TECHNICAL_ARCHITECTURE_AND_SCOPE.md owns architecture facts.
+    README / LICENSE own product intro and licensing.
+    Do not invent new top-level docs for this change.
+
+review:
+  path_instructions:
+    - path: "schemas/**"
+      instructions: |
+        Ring length must stay TARGET_RING=128; innovations is optional.
+    - path: "services/interface_service/**"
+      instructions: |
+        Dashboard export must use schema_path_override when calling pipeline_core.

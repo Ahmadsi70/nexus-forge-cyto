@@ -1,0 +1,7 @@
+onnxruntime
+numpy
+scipy
+scikit-image
+opencv-python-headless
+joblib
+scikit-learn

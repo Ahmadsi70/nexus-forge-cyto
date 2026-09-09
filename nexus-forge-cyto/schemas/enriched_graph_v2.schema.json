@@ -1,0 +1,391 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexus-forge.local/schemas/enriched_graph_v2.schema.json",
+  "title": "Nexus-Forge Enriched Graph V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "cell_count",
+    "cells",
+    "clinical",
+    "spatial_analysis",
+    "spatial_features",
+    "cell_biology",
+    "advanced_spatial_stats",
+    "graph_export_meta"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "2.0.0"
+    },
+    "cell_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "cells": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "array",
+        "minItems": 128,
+        "maxItems": 128,
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "clinical": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Malignant",
+          "Normal"
+        ]
+      }
+    },
+    "spatial_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "knn_k",
+        "rbf_sigma",
+        "knn_metric"
+      ],
+      "properties": {
+        "knn_k": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rbf_sigma": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "knn_metric": {
+          "type": "string"
+        }
+      }
+    },
+    "spatial_features": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cell_id",
+          "centroid",
+          "knn_density",
+          "rbf_risk_score",
+          "area",
+          "perimeter",
+          "circularity",
+          "eccentricity",
+          "distance_to_tumor_edge"
+        ],
+        "properties": {
+          "cell_id": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "centroid": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            }
+          },
+          "knn_density": {
+            "type": "number",
+            "minimum": 0
+          },
+          "rbf_risk_score": {
+            "type": "number",
+            "minimum": 0
+          },
+          "area": {
+            "type": "number",
+            "minimum": 0
+          },
+          "perimeter": {
+            "type": "number",
+            "minimum": 0
+          },
+          "circularity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "eccentricity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "distance_to_tumor_edge": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "cell_biology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class_schema_version",
+        "source",
+        "labels",
+        "confidence"
+      ],
+      "properties": {
+        "class_schema_version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "labels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "Epithelial_Malignant",
+              "Inflammatory",
+              "Lymphocyte",
+              "Stromal"
+            ]
+          }
+        },
+        "confidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "projection": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "kdtree_iou_fallback"
+              ]
+            },
+            "max_distance_px": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "iou_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    },
+    "advanced_spatial_stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clustering_index",
+        "mixing_score",
+        "parameters"
+      ],
+      "properties": {
+        "clustering_index": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "global_ci",
+            "classwise_ci"
+          ],
+          "properties": {
+            "global_ci": {
+              "type": "number",
+              "minimum": 0
+            },
+            "classwise_ci": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "mixing_score": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "immune_tumor_edges",
+            "eligible_edges"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "immune_tumor_edges": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "eligible_edges": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "knn_k",
+            "ci_reference",
+            "mixing_policy"
+          ],
+          "properties": {
+            "knn_k": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "ci_reference": {
+              "type": "string",
+              "enum": [
+                "csr_poisson_nn"
+              ]
+            },
+            "mixing_policy": {
+              "type": "string",
+              "enum": [
+                "immune_tumor_boundary_edge_ratio"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "graph_export_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_feature_order",
+        "node_feature_dim",
+        "edge_policy",
+        "tensor_dtypes",
+        "export_format"
+      ],
+      "properties": {
+        "node_feature_order": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "node_feature_dim": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "edge_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "knn",
+                "radius",
+                "hybrid"
+              ]
+            },
+            "k": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "radius_px": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "tensor_dtypes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "edge_index"
+          ],
+          "properties": {
+            "x": {
+              "type": "string",
+              "enum": [
+                "float32",
+                "float64"
+              ]
+            },
+            "edge_index": {
+              "type": "string",
+              "enum": [
+                "int64"
+              ]
+            }
+          }
+        },
+        "export_format": {
+          "type": "string",
+          "enum": [
+            "pyg_data_dict_v1"
+          ]
+        },
+        "target_label_key": {
+          "type": "string"
+        }
+      }
+    },
+    "options": {
+      "type": "object"
+    },
+    "pre_analysis": {},
+    "dynamic_calibration": {
+      "type": "object"
+    },
+    "annotation_adapter": {
+      "type": "object"
+    },
+    "gold_standard_source": {
+      "type": "string"
+    },
+    "clinical_interpretation": {
+      "type": "object"
+    },
+    "innovations": {
+      "type": "object",
+      "description": "Optional Rust geometric innovation layer (κ-adjacent analytics)."
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "Index alignment invariants are enforced by runtime validators."
+    }
+  ]
+}

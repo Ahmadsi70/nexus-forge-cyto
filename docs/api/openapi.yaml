@@ -1,0 +1,339 @@
+openapi: "3.0.3"
+info:
+  title: Nexus-Forge Cyto Geometry API
+  version: "0.2.0"
+  description: >
+    Dual-ingress REST API for explainable geometry analysis of
+    histopathology cell annotations. Accepts images (SAM 3 segmentation)
+    or vector annotations (XML/GeoJSON/JSON), normalizes to 128-point
+    polygon rings, enriches with deterministic morphometrics + spatial
+    topology, and exports auditable malignancy scores.
+
+    **Authentication:** Optional API key via `X-API-Key` header.
+    When `NEXUS_API_KEY` is unset, all endpoints are open (dev mode).
+
+  contact:
+    name: ClinicalGuard Developer
+    url: https://github.com/clinicalguard/nexus-forge-cyto
+
+servers:
+  - url: http://localhost:8810
+    description: Local development server
+  - url: https://nexus.example.com
+    description: Production server
+
+tags:
+  - name: Health
+    description: Liveness and readiness probes
+  - name: Ingest
+    description: Image and vector annotation ingestion
+  - name: Enrich
+    description: Rust geometry + kappa curvature enrichment
+  - name: Export
+    description: Schema validation and spatial statistics
+
+paths:
+  /live:
+    get:
+      tags: [Health]
+      summary: Liveness probe
+      description: Returns OK if the process is alive.
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+
+  /ready:
+    get:
+      tags: [Health]
+      summary: Readiness probe
+      description: >
+        Checks whether the service can accept traffic. Verifies Rust bridge
+        availability and SAM 3 model path (if configured).
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ready, "not ready"]
+                  checks:
+                    type: object
+                    properties:
+                      rust_bridge:
+                        type: string
+                      sam3_model:
+                        type: string
+        '503':
+          description: Service is not ready
+
+  /health:
+    get:
+      tags: [Health]
+      summary: Legacy health check
+      deprecated: true
+      description: Use /live or /ready instead.
+      responses:
+        '200':
+          description: OK
+
+  /v1/ingest/image:
+    post:
+      tags: [Ingest]
+      summary: Segment H&E image with SAM 3
+      description: >
+        Upload an H&E-stained tissue patch (PNG/JPG/TIFF). SAM 3 detects
+        and segments individual cell nuclei, producing a gold-segment
+        envelope with 128-point polygon rings.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: H&E tissue patch image (max 100 MB)
+      parameters:
+        - name: text_prompt
+          in: query
+          description: Optional SAM 3 text prompt for guided segmentation
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Gold segment envelope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResponse'
+        '400':
+          description: Invalid image or segmentation failure
+        '413':
+          description: File too large (max 100 MB)
+        '422':
+          description: No nuclei detected in image
+
+  /v1/ingest/vector:
+    post:
+      tags: [Ingest]
+      summary: Parse vector annotations to gold segment
+      description: >
+        Accept Aperio/ImageScope XML, QuPath GeoJSON, or custom JSON polygon
+        annotations. Normalizes all formats to a unified 128-point ring
+        representation.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Annotation file (.xml, .geojson, .json, .csv)
+      responses:
+        '200':
+          description: Gold segment envelope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResponse'
+        '400':
+          description: Invalid annotation format or parsing error
+        '413':
+          description: File too large (max 100 MB)
+
+  /v1/enrich:
+    post:
+      tags: [Enrich]
+      summary: Enrich gold segment with geometry + kappa curvature
+      description: >
+        Runs the full deterministic pipeline: morphometrics (area, perimeter,
+        circularity, eccentricity), spatial topology (kNN density, RBF risk
+        field), explainable malignancy scoring (weighted 5-component heuristic),
+        convex hull tumor boundary, and distance-to-edge metrics.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrichRequest'
+      responses:
+        '200':
+          description: Enriched segment with clinical labels and spatial features
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichResponse'
+        '400':
+          description: Invalid gold segment structure
+        '500':
+          description: Rust bridge failure
+
+  /v1/export:
+    post:
+      tags: [Export]
+      summary: Export enriched results with schema validation
+      description: >
+        Validates the enriched output against the JSON schema, computes
+        spatial statistics, and produces a final stage_v2 JSON for
+        downstream consumption (QuPath, HALO, data warehouse).
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '200':
+          description: Final validated output
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponse'
+        '400':
+          description: Schema validation failure
+
+  /analyze-image:
+    post:
+      tags: [Export]
+      summary: Legacy full-pipeline endpoint
+      deprecated: true
+      description: >
+        Legacy endpoint for the old HTML frontend. Runs the complete pipeline
+        (ingest -> enrich -> export) and returns a simplified response.
+        Use the /v1/* endpoints for new integrations.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Simplified analysis result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  cells:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CellResult'
+                  timing_ms:
+                    type: object
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: >
+        Optional API key. When NEXUS_API_KEY environment variable is set,
+        this header is required. When unset, all endpoints are open.
+
+  schemas:
+    IngestResponse:
+      type: object
+      required: [cell_count, source, gold_segment]
+      properties:
+        cell_count:
+          type: integer
+          description: Number of cells detected/ingested
+          example: 42
+        source:
+          type: string
+          description: Source format identifier
+          example: "aperio_imagescope_xml"
+        gold_segment:
+          type: object
+          description: Normalized gold segment envelope (128-point rings)
+
+    EnrichRequest:
+      type: object
+      required: [gold_segment]
+      properties:
+        gold_segment:
+          type: object
+          description: Gold segment envelope from /v1/ingest/*
+
+    EnrichResponse:
+      type: object
+      required: [cell_count, enriched]
+      properties:
+        cell_count:
+          type: integer
+        enriched:
+          type: object
+          description: >
+            Enriched output containing cells (128-point rings), clinical labels
+            ("Malignant"/"Normal"), spatial_features (area, circularity,
+            eccentricity, kNN density, RBF risk, distance to tumor edge),
+            spatial_analysis, and innovations.
+
+    ExportRequest:
+      type: object
+      required: [enriched]
+      properties:
+        enriched:
+          type: object
+          description: Rust-enriched payload from /v1/enrich
+
+    ExportResponse:
+      type: object
+      required: [cell_count, stage_v2_final]
+      properties:
+        cell_count:
+          type: integer
+        stage_v2_final:
+          type: object
+          description: Final validated output with spatial statistics
+
+    CellResult:
+      type: object
+      properties:
+        x:
+          type: number
+          description: Centroid X coordinate
+        "y":
+          type: number
+          description: Centroid Y coordinate
+        is_cancer:
+          type: boolean
+          description: Malignancy classification

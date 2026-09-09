@@ -1,0 +1,14 @@
+# Nexus-Forge pathology dashboard (services/interface_service/dashboard_app.py)
+#
+# Why upper-bounded: streamlit 1.31 added `st.button(width=...)`; we removed that
+# arg, but capping avoids surprise API churn. pyarrow/pandas parity avoids the
+# classic "pandas 2.x ABI vs pyarrow 10" import errors.
+streamlit>=1.32,<2.0
+folium>=0.15,<0.20
+streamlit-folium>=0.18,<0.30
+python-dotenv>=1.0,<2.0
+plotly>=5.18,<6.0
+pandas>=2.0,<3.0
+numpy>=1.24,<3.0
+pyarrow>=14.0,<20.0
+lxml>=5.0,<6.0

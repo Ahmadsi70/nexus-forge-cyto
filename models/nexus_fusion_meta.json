@@ -1,0 +1,27 @@
+{
+  "auc": 0.9815646632548041,
+  "f1": 0.8768,
+  "precision": 0.9383561643835616,
+  "recall": 0.8228228228228228,
+  "accuracy": 0.9449213161659513,
+  "optimal_threshold": 0.574410885866192,
+  "n_train": 5591,
+  "n_val": 1398,
+  "n_features": 16,
+  "class_distribution": [
+    5324,
+    1665
+  ],
+  "model": "hovernet_fold12.onnx (original)",
+  "note": "Deployed as hovernet_finetuned.onnx. Original fold12 retained - fine-tuned variants degraded NP detection. Benchmark: 812 cells / 93 images Pan-Cancer.",
+  "benchmark": {
+    "samples": 100,
+    "completed": 93,
+    "errors": 7,
+    "total_cells": 812,
+    "cells_per_image_mean": 8.7,
+    "malignant_predicted": 265,
+    "latency_ms_mean": 7057.6,
+    "throughput_img_per_s": 0.14
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "host": "localhost",
+    "port": 8810,
+    "timestamp": "2026-08-24T18:00:13Z"
+  },
+  "datasets": {
+    "pan_cancer": {
+      "dataset": "pan_cancer",
+      "samples_requested": 50,
+      "samples_completed": 0,
+      "errors": 6,
+      "error_rate": 12.0,
+      "total_cells_detected": 0,
+      "total_malignant_detected": 0,
+      "latency_ms": {
+        "mean": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "min": 0,
+        "max": 0
+      },
+      "timing_breakdown_ms": {
+        "image_processing": {
+          "mean": NaN
+        },
+        "mojo_engine": {
+          "mean": NaN
+        }
+      },
+      "throughput": {
+        "images_per_second": 0,
+        "cells_per_second": 0
+      }
+    }
+  },
+  "endpoints": {
+    "health": {
+      "p50": 0.71,
+      "p95": 0.78,
+      "p99": 0.78,
+      "mean": 0.72,
+      "min": 0.67,
+      "max": 0.78,
+      "n": 10
+    },
+    "ingest_vector": {
+      "endpoint": "/v1/ingest/vector",
+      "results": [
+        {
+          "n_cells": 1,
+          "mean_ms": 2.71
+        },
+        {
+          "n_cells": 10,
+          "mean_ms": 18.17
+        },
+        {
+          "n_cells": 50,
+          "mean_ms": 87.92
+        },
+        {
+          "n_cells": 200,
+          "mean_ms": 338.6
+        }
+      ]
+    }
+  },
+  "pipeline": {},
+  "summary": {
+    "overall_mean_latency_ms": 0.0,
+    "overall_throughput_img_per_s": 0.0
+  }
+}

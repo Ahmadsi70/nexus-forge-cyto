@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "host": "localhost",
+    "port": 8810,
+    "timestamp": "2026-08-24T17:59:48Z"
+  },
+  "datasets": {
+    "lc25000": {
+      "error": "Dataset 'Lunit/LC25000' doesn't exist on the Hub or cannot be accessed."
+    }
+  },
+  "endpoints": {
+    "health": {
+      "p50": 0.62,
+      "p95": 0.68,
+      "p99": 0.7,
+      "mean": 0.63,
+      "min": 0.59,
+      "max": 0.7,
+      "n": 10
+    },
+    "ingest_vector": {
+      "endpoint": "/v1/ingest/vector",
+      "results": [
+        {
+          "n_cells": 1,
+          "mean_ms": 2.72
+        },
+        {
+          "n_cells": 10,
+          "mean_ms": 17.63
+        },
+        {
+          "n_cells": 50,
+          "mean_ms": 85.7
+        },
+        {
+          "n_cells": 200,
+          "mean_ms": 344.83
+        }
+      ]
+    }
+  },
+  "pipeline": {},
+  "summary": {}
+}

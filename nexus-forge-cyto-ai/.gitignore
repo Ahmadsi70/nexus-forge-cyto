@@ -1,0 +1,27 @@
+# Rust build artifacts
+target/
+
+# Runtime pipeline outputs
+tmp/production_output/
+
+# Python caches & virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# PyTorch checkpoints
+*.pt
+*.pth
+
+# Loose temporary run outputs
+*.xml
+*.html
+!schemas/**
+!tests/**
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+*.swp

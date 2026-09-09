@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Nexus | AI Pathology</title>
+    <meta name="description" content="State-of-the-art pathology cell detection powered by Antigravity Engine and Mojo GNN.">
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Dynamic Background Elements -->
+    <div class="bg-glow bg-glow-primary"></div>
+    <div class="bg-glow bg-glow-secondary"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h2>Antigravity</h2>
+            </div>
+            
+            <nav>
+                <a href="#" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Engine Metrics
+                </a>
+                <a href="#" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    Health Status
+                </a>
+            </nav>
+
+            <div class="engine-status">
+                <div class="status-indicator"></div>
+                <span>Mojo Engine Online</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="page-title">
+                    <h1>Pathology Nexus</h1>
+                    <p>Real-time GNN inference powered by Mojo & StarDist</p>
+                </div>
+            </header>
+
+            <div class="content-grid">
+                
+                <!-- Main Viewer / Uploader -->
+                <section class="viewer-section glass-panel">
+                    <!-- Drop Zone -->
+                    <div class="upload-zone" id="drop-zone">
+                        <input type="file" id="file-input" accept="image/*" hidden>
+                        <div class="upload-content">
+                            <div class="icon-ring">
+                                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                            </div>
+                            <h3>Upload Slide</h3>
+                            <p>Drag & drop high-resolution pathology image</p>
+                            <button class="btn-primary" id="btn-browse">Browse Files</button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Canvas View -->
+                    <div class="canvas-wrapper hidden" id="results-section">
+                        <canvas id="image-canvas"></canvas>
+                        
+                        <!-- Futuristic Scanning Overlay -->
+                        <div class="scanner-overlay hidden" id="scanner-overlay">
+                            <div class="scanner-laser"></div>
+                            <div class="scanner-text">Neural Graph Processing...</div>
+                        </div>
+                        
+                        <button class="btn-secondary floating-btn" id="btn-reset">New Scan</button>
+                    </div>
+                </section>
+
+                <!-- Stats Dashboard Sidebar -->
+                <section class="stats-section">
+                    
+                    <div class="stat-card glass-panel highlight-card">
+                        <div class="stat-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <h3>Total Pipeline Latency</h3>
+                        </div>
+                        <div class="stat-value" id="stat-total">-- ms</div>
+                        <div class="stat-subtext">Vision + Graph Engine</div>
+                    </div>
+
+                    <div class="stat-grid">
+                        <div class="stat-card mini-card glass-panel">
+                            <h4>Nodes Detected</h4>
+                            <div class="stat-value small" id="stat-nodes">--</div>
+                        </div>
+                        <div class="stat-card mini-card glass-panel">
+                            <h4>Graph Edges</h4>
+                            <div class="stat-value small" id="stat-edges">--</div>
+                        </div>
+                        <div class="stat-card mini-card glass-panel">
+                            <h4>Vision AI</h4>
+                            <div class="stat-value small" id="stat-prep">-- ms</div>
+                        </div>
+                        <div class="stat-card mini-card glass-panel">
+                            <h4>Mojo GNN</h4>
+                            <div class="stat-value small text-glow" id="stat-mojo">-- ms</div>
+                        </div>
+                    </div>
+
+                    <div class="legend-card glass-panel hidden" id="legend-card">
+                        <h3>Detection Legend</h3>
+                        <div class="legend-item">
+                            <span class="dot dot-cancer"></span>
+                            <span>Malignant Cells (GNN Target)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="dot dot-normal"></span>
+                            <span>Benign / Normal Cells</span>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

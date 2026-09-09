@@ -1,0 +1,10 @@
+# Nexus-Forge geometry HTTP API (services/api_service/main.py)
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27,<1.0
+python-multipart>=0.0.9,<1.0
+httpx>=0.27,<1.0
+Pillow>=10.0,<13.0
+
+# Image ingress (SAM 3 — install on server/GPU images)
+# ultralytics>=8.3.237,<9.0
+# opencv-python-headless>=4.8,<5.0

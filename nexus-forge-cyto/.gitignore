@@ -1,0 +1,46 @@
+# Rust build artifacts
+target/
+legacy/mojo/*.so
+legacy/mojo/*.dll
+mojo_dynlib/
+
+# Runtime pipeline outputs
+tmp/
+tmp/production_output/
+
+# Secrets (never commit)
+.env
+.env.local
+*.pem
+
+# Python caches & virtual environments
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.venv-sam3/
+
+# PyTorch checkpoints
+*.pt
+*.pth
+
+# Loose temporary run outputs
+*.xml
+*.html
+!schemas/**
+!tests/**
+# Keep tests fixtures tracked, but never bytecode caches under tests/
+tests/**/__pycache__/
+tests/**/*.py[cod]
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# Strip / backup artifacts
+.ai_backup/
+cleanup_report.json

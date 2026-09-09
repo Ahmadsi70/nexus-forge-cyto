@@ -1,0 +1,11 @@
+# Cellpose segmentation runtime (services/ingest_service/cellpose_ingest.py).
+#
+# Why pinned: cellpose 4.x pins a narrow torch band itself; leaving torch/torchvision
+# fully unpinned produces non-reproducible CUDA/CPU wheels across hosts and has
+# historically broken `torch.load(weights_only=True)` (requires torch >= 2.6).
+cellpose==4.1.1
+opencv-python-headless>=4.9,<5.0
+scikit-image>=0.22,<0.26
+tifffile>=2024.5.0
+torch>=2.6,<2.8
+numpy>=1.24,<3.0

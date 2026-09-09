@@ -1,0 +1,10 @@
+# Nexus-Forge Docker build context exclusions
+target/
+.pixi/
+**/__pycache__/
+**/.pytest_cache/
+*.pt
+tmp/
+repodata.json
+pixi.test.toml
+.git/

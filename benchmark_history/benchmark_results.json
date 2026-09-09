@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "host": "localhost",
+    "port": 8810,
+    "timestamp": "2026-08-24T18:10:21Z"
+  },
+  "datasets": {
+    "pan_cancer": {
+      "error": "all failed",
+      "n_errors": 11
+    },
+    "breast": {
+      "error": "all failed",
+      "n_errors": 11
+    },
+    "bach": {
+      "error": "all failed",
+      "n_errors": 11
+    }
+  },
+  "endpoint_latency": {
+    "ingest_vector": [
+      {
+        "n_cells": 1,
+        "mean_ms": 3.59
+      },
+      {
+        "n_cells": 10,
+        "mean_ms": 19.82
+      },
+      {
+        "n_cells": 50,
+        "mean_ms": 93.67
+      },
+      {
+        "n_cells": 200,
+        "mean_ms": 365.21
+      }
+    ]
+  },
+  "summary": {}
+}

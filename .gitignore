@@ -1,0 +1,72 @@
+# Environment variables — NEVER commit real credentials
+.env
+.env.*
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+
+# Rust
+target/
+*.rs.bk
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+.trae/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project artifacts
+tmp/
+*.etl
+
+# Legacy / orphaned directories (kept for history, excluded from builds)
+cloud_backup/
+vendor/
+gnn_model/nexus-ai-src.tar.gz
+gnn_model/workspace-src.tar.gz
+*.tar.gz
+
+# Large training artifacts (not needed for inference)
+training/checkpoints/
+training/*.pth
+training/*.b64
+
+# Base model checkpoints (not needed — use hovernet_topology_seg.onnx instead)
+models/full_model.pth
+models/hovernet_finetuned.onnx
+models/hovernet_fold12.onnx
+models/hovernet_fold12.pth
+models/hovernet_best_pannuke.pth
+models/hovernet_finetuned_pannuke.pth
+
+# Analysis/debug outputs
+analysis_mnseg.npz
+analysis_mnseg.png
+
+# Session plans
+.zcode/plans/
+
+# Node modules
+node_modules/
+
+# ZCode config
+.zcode/
+.no-mistakes/
+
+# Logs
+*.log
+
+# Debug scripts
+debug_*.py
+debug_*.npz
+debug_*.png# Offline wheels (too large for GitHub — download from PyPI instead)
+offline/wheels/

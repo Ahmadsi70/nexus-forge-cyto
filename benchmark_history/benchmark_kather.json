@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "host": "localhost",
+    "port": 8810,
+    "timestamp": "2026-08-24T18:00:48Z"
+  },
+  "datasets": {
+    "kather": {
+      "error": "Dataset 'kather/nct_crc_he_100k' doesn't exist on the Hub or cannot be accessed."
+    }
+  },
+  "endpoints": {
+    "health": {
+      "p50": 0.7,
+      "p95": 0.77,
+      "p99": 0.78,
+      "mean": 0.71,
+      "min": 0.68,
+      "max": 0.78,
+      "n": 10
+    },
+    "ingest_vector": {
+      "endpoint": "/v1/ingest/vector",
+      "results": [
+        {
+          "n_cells": 1,
+          "mean_ms": 2.71
+        },
+        {
+          "n_cells": 10,
+          "mean_ms": 18.61
+        },
+        {
+          "n_cells": 50,
+          "mean_ms": 91.32
+        },
+        {
+          "n_cells": 200,
+          "mean_ms": 376.11
+        }
+      ]
+    }
+  },
+  "pipeline": {},
+  "summary": {}
+}

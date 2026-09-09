@@ -1,0 +1,59 @@
+services:
+  nexus-forge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nexus-forge-cyto:latest
+    container_name: nexus-forge-cyto
+    ports:
+      - "8501:8501"
+    environment:
+      NEXUS_REPO_ROOT: /app
+      NEXUS_OUTPUT_DIR: /app/tmp/production_output
+      NEXUS_POLL_MS: "500"
+      PYTHONPATH: /app/services
+    volumes:
+      - nexus_production_output:/app/tmp/production_output
+    env_file:
+      - path: ../.env
+        required: false
+    restart: unless-stopped
+    mem_limit: ${NEXUS_DOCKER_MEM:-8g}
+    mem_reservation: ${NEXUS_DOCKER_MEM_RESERVE:-4g}
+    cpus: ${NEXUS_DOCKER_CPUS:-4.0}
+    memswap_limit: ${NEXUS_DOCKER_MEMSWAP:-12g}
+    oom_kill_disable: false
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+  nexus-forge-api:
+    image: nexus-forge-cyto:latest
+    container_name: nexus-forge-cyto-api
+    command: ["pixi", "run", "api"]
+    ports:
+      - "8810:8810"
+    environment:
+      NEXUS_REPO_ROOT: /app
+      NEXUS_OUTPUT_DIR: /app/tmp/production_output
+      PYTHONPATH: /app/services
+    volumes:
+      - nexus_production_output:/app/tmp/production_output
+    env_file:
+      - path: ../.env
+        required: false
+    restart: unless-stopped
+    mem_limit: ${NEXUS_DOCKER_MEM:-8g}
+    cpus: ${NEXUS_DOCKER_CPUS:-4.0}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8810/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  nexus_production_output:
